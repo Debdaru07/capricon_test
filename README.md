@@ -1,6 +1,7 @@
 # Capricorn_Test
 
-This project is a Flutter application designed for [briefly describe the app's purpose, e.g., stock tracking, portfolio management, etc.]. It leverages [mention key technologies or patterns, e.g., Riverpod for state management, REST APIs for data fetching, etc.] to provide a robust and scalable solution.
+This project is a Flutter application designed for Capricorn Company's Test, Stock-Broking Application. 
+It leverages Riverpod for state management, REST APIs for data fetching, etc. to provide a robust and scalable solution.
 
 ## Local Setup
 
