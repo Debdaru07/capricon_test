@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/constants.dart';
 import '../model/stock_model.dart';
 import '../providers/stock_details_provider.dart';
+import 'stock_holdings/stock_holdings_details.dart';
 import 'stock_holdings/stock_holdings_listing.dart';
 
 class StockDetailsScreen extends ConsumerStatefulWidget {
@@ -287,6 +288,12 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: AppConstants.textColor,
+                  ),
+                ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StockHoldingDetails(holding: holding),
                   ),
                 ),
               ),
