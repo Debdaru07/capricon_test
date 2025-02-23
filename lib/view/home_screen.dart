@@ -4,6 +4,7 @@ import '../core/constants.dart';
 import '../providers/login_provider.dart';
 import '../providers/stock_search_provider.dart';
 import 'login.dart';
+import 'stock_details.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -135,27 +136,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             itemCount: stockState.stocks.length,
                             itemBuilder: (context, index) {
                               final stock = stockState.stocks[index];
-                              return Card(
-                                color: Colors.grey[900],
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.paddingLarge,
-                                  vertical: AppConstants.paddingSmall,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  side: const BorderSide(color: AppConstants.accentGold),
-                                ),
-                                child: ListTile(
-                                  leading: stock.image != null
-                                      ? CircleAvatar(backgroundImage: NetworkImage(stock.image!.url))
-                                      : const CircleAvatar(child: Icon(Icons.business, color: AppConstants.accentGold)),
-                                  title: Text(
-                                    stock.name,
-                                    style: AppConstants.bodyFont.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => StockDetailsScreen(stockId: stock.id)));
+                                },
+                                child: Card(
+                                  color: Colors.grey[900],
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: AppConstants.paddingLarge,
+                                    vertical: AppConstants.paddingSmall,
                                   ),
-                                  subtitle: Text(
-                                    '${stock.symbol} • ${stock.exchange}',
-                                    style: AppConstants.bodyFont.copyWith(fontSize: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: const BorderSide(color: AppConstants.accentGold),
+                                  ),
+                                  child: ListTile(
+                                    leading: stock.image != null
+                                        ? CircleAvatar(backgroundImage: NetworkImage(stock.image!.url))
+                                        : const CircleAvatar(child: Icon(Icons.business, color: AppConstants.accentGold)),
+                                    title: Text(
+                                      stock.name,
+                                      style: AppConstants.bodyFont.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(
+                                      '${stock.symbol} • ${stock.exchange}',
+                                      style: AppConstants.bodyFont.copyWith(fontSize: 14),
+                                    ),
                                   ),
                                 ),
                               );
