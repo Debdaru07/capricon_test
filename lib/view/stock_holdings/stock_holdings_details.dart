@@ -38,7 +38,7 @@ class _StockHoldingDetailsState extends State<StockHoldingDetails> {
           backgroundColor: AppConstants.accentGold,
           elevation: 2,
           iconTheme: IconThemeData(
-            color: Colors.black, // Set the back button color to black
+            color: Colors.black,
           )
         ),
         body: Padding(

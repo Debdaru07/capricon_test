@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/constants.dart';
 import '../providers/login_provider.dart';
+import '../providers/password_toggler_provider.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -14,11 +13,12 @@ class LoginScreen extends ConsumerWidget {
     final loginState = ref.watch(loginProvider);
     final loginNotifier = ref.read(loginProvider.notifier);
 
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
+    // Use auto-dispose providers for TextEditingControllers
+    final emailController = ref.watch(emailControllerProvider);
+    final passwordController = ref.watch(passwordControllerProvider);
+    final isPasswordVisible = ref.watch(passwordVisibilityProvider);
 
     ref.listen<LoginState>(loginProvider, (previous, next) {
-      log('State changed: isLoading=${next.isLoading}, authResponse=${next.authResponse != null}, error=${next.error}');
       if (next.authResponse != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           AppConstants.successSnackBar('Login successful! Welcome, ${next.authResponse!.user.fullName}'),
@@ -63,10 +63,19 @@ class LoginScreen extends ConsumerWidget {
                 const SizedBox(height: AppConstants.paddingMedium),
                 TextField(
                   controller: passwordController,
-                  obscureText: true,
+                  obscureText: !isPasswordVisible,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock, color: AppConstants.accentGold),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: AppConstants.accentGold,
+                      ),
+                      onPressed: () {
+                        ref.read(passwordVisibilityProvider.notifier).state = !isPasswordVisible;
+                      },
+                    ),
                     labelStyle: AppConstants.bodyFont,
                   ),
                 ),
