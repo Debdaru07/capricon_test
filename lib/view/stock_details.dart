@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/constants.dart';
 import '../model/stock_model.dart';
 import '../providers/stock_details_provider.dart';
+import 'stock_holdings/stock_holdings_listing.dart';
 
 class StockDetailsScreen extends ConsumerStatefulWidget {
   final int stockId;
@@ -157,7 +158,7 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
               ),
             ),
           ),
-          const SizedBox(height: AppConstants.paddingMedium),
+          const SizedBox(height: AppConstants.paddingSmall),
           const Divider(color: AppConstants.accentGold, thickness: 1),
           const SizedBox(height: AppConstants.paddingMedium),
           Text(
@@ -177,6 +178,8 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
             ),
           ),
           const SizedBox(height: AppConstants.paddingMedium),
+          const Divider(color: AppConstants.accentGold, thickness: 1),
+          const SizedBox(height: AppConstants.paddingSmall),
           Card(
             elevation: 4,
             shape: RoundedRectangleBorder(
@@ -208,13 +211,39 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
             ),
           ),
           const SizedBox(height: AppConstants.paddingMedium),
-          Text(
-            'Top Holdings',
-            style: AppConstants.headlineFont.copyWith(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppConstants.textColor,
-            ),
+          const Divider(color: AppConstants.accentGold, thickness: 1),
+          const SizedBox(height: AppConstants.paddingSmall),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Top Holdings',
+                style: AppConstants.headlineFont.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppConstants.textColor,
+                ),
+              ),
+              // StockHoldingsListing
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => StockHoldingsListing(initialHoldings: stock.holdings,)
+                    )
+                  );
+                },
+                child: Text(
+                  'See All',
+                  style: AppConstants.linkFont.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppConstants.textColor,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppConstants.paddingSmall),
           if (stock.holdings.isEmpty)
@@ -227,41 +256,42 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
             )
           else
             ...stock.holdings.take(3).map((holding) => Card(
-                  margin: const EdgeInsets.symmetric(vertical: AppConstants.paddingSmall),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: const BorderSide(color: AppConstants.accentGold),
+              margin: const EdgeInsets.symmetric(vertical: AppConstants.paddingSmall),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(color: AppConstants.accentGold),
+              ),
+              color: Colors.grey[900],
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(AppConstants.paddingMedium),
+                leading: const Icon(Icons.business, color: AppConstants.accentGold),
+                title: Text(
+                  holding.stock.name ?? 'Unknown',
+                  style: AppConstants.bodyFont.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppConstants.textColor,
                   ),
-                  color: Colors.grey[900],
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(AppConstants.paddingMedium),
-                    leading: const Icon(Icons.business, color: AppConstants.accentGold),
-                    title: Text(
-                      holding.stock.name ?? 'Unknown',
-                      style: AppConstants.bodyFont.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppConstants.textColor,
-                      ),
-                    ),
-                    subtitle: Text(
-                      holding.stock.symbol ?? 'N/A',
-                      style: AppConstants.bodyFont.copyWith(
-                        fontSize: 14,
-                        color: AppConstants.textColor.withOpacity(0.8),
-                      ),
-                    ),
-                    trailing: Text(
-                      'Percentage: ${holding.percentage != null ? '${holding.percentage!.toStringAsFixed(2)}%' : 'N/A'}',
-                      style: AppConstants.bodyFont.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppConstants.textColor,
-                      ),
-                    ),
+                ),
+                subtitle: Text(
+                  holding.stock.symbol ?? 'N/A',
+                  style: AppConstants.bodyFont.copyWith(
+                    fontSize: 14,
+                    color: AppConstants.textColor.withOpacity(0.8),
                   ),
-                )),
+                ),
+                trailing: Text(
+                  'Percentage: ${holding.percentage != null ? '${holding.percentage!.toStringAsFixed(2)}%' : 'N/A'}',
+                  style: AppConstants.bodyFont.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppConstants.textColor,
+                  ),
+                ),
+              ),
+            )
+          ),
         ],
       ),
     );
