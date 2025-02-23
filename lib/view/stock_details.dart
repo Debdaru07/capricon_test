@@ -241,6 +241,8 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: AppConstants.textColor,
+                    decoration: TextDecoration.underline, // Add underline
+                    fontStyle: FontStyle.italic
                   ),
                 ),
               ),

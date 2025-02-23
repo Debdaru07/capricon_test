@@ -13,13 +13,6 @@ class StockHoldingDetails extends StatefulWidget {
 }
 
 class _StockHoldingDetailsState extends State<StockHoldingDetails> {
-  bool _isExpanded = false;
-
-  void _toggleExpansion() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
-  }
 
   void _launchURL(String? url) async {
     if (url != null && await canLaunchUrlString(url)) {
@@ -50,45 +43,44 @@ class _StockHoldingDetailsState extends State<StockHoldingDetails> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppConstants.paddingLarge),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: AppConstants.accentGold),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: const BorderSide(color: AppConstants.accentGold),
+                  ),
+                  color: Colors.grey[900],
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(AppConstants.paddingMedium),
+                    title: Text(
+                      stock.name ?? 'Unknown',
+                      style: AppConstants.bodyFont.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppConstants.textColor,
+                      ),
+                    ),
+                    subtitle: Text(
+                      stock.symbol ?? 'N/A',
+                      style: AppConstants.bodyFont.copyWith(
+                        fontSize: 14,
+                        color: AppConstants.textColor.withOpacity(0.8),
+                      ),
+                    ),
+                    trailing: Text(
+                      'Percentage: ${widget.holding.percentage?.toStringAsFixed(2) ?? 'N/A'}%',
+                      style: AppConstants.bodyFont.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppConstants.textColor,
+                      ),
+                    ),
+                  ),
                 ),
-                color: Colors.grey[900],
-                child: ListTile(
-                  contentPadding: const EdgeInsets.all(AppConstants.paddingMedium),
-                  title: Text(
-                    stock.name ?? 'Unknown',
-                    style: AppConstants.bodyFont.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppConstants.textColor,
-                    ),
-                  ),
-                  subtitle: Text(
-                    stock.symbol ?? 'N/A',
-                    style: AppConstants.bodyFont.copyWith(
-                      fontSize: 14,
-                      color: AppConstants.textColor.withOpacity(0.8),
-                    ),
-                  ),
-                  trailing: Text(
-                    'Percentage: ${widget.holding.percentage?.toStringAsFixed(2) ?? 'N/A'}%',
-                    style: AppConstants.bodyFont.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppConstants.textColor,
-                    ),
-                  ),
-                  onTap: _toggleExpansion,
-                ),
-              ),
-              if (_isExpanded)
                 Padding(
                   padding: const EdgeInsets.only(top: AppConstants.paddingMedium),
                   child: Card(
@@ -157,7 +149,8 @@ class _StockHoldingDetailsState extends State<StockHoldingDetails> {
                     ),
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
