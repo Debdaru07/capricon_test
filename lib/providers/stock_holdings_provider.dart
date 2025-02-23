@@ -47,10 +47,10 @@ class StockHoldingsNotifier extends StateNotifier<StockHoldingsState> {
     }
 
     final filtered = state.holdings.where((holding) {
-      final name = holding.stock.name.toLowerCase();
-      final symbol = holding.stock.symbol.toLowerCase();
+      final name = holding.stock.name?.toLowerCase();
+      final symbol = holding.stock.symbol?.toLowerCase();
       final searchQuery = query.toLowerCase();
-      return name.contains(searchQuery) || symbol.contains(searchQuery);
+      return (name ?? '').contains(searchQuery) || (symbol ?? '').contains(searchQuery);
     }).toList();
 
     state = state.copyWith(filteredHoldings: filtered);

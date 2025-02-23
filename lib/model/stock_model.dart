@@ -53,40 +53,47 @@ class StockDetailsModel {
 
 class Holding {
   final int id;
-  final double? percentage; // Nullable in case percentage is missing
+  final double? percentage;
   final Stock stock;
 
   Holding({
     required this.id,
-    this.percentage,
+    required this.percentage,
     required this.stock,
   });
 
+  // Factory constructor to create a Holding from JSON
   factory Holding.fromJson(Map<String, dynamic> json) {
     return Holding(
-      id: json['id'] as int? ?? 0, // Default to 0 if null
-      percentage: json['percentage'] != null ? (json['percentage'] as num).toDouble() : null,
-      stock: Stock.fromJson(json['stock'] as Map<String, dynamic>? ?? {}), // Empty map if null
+      id: json['id'] as int,
+      percentage: json['percentage'] as double?,
+      stock: Stock.fromJson(json['stock'] as Map<String, dynamic>),
     );
+  }
+
+  // Method to convert a StockHolding to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'percentage': percentage,
+      'stock': stock.toJson(),
+    };
   }
 }
 
 class Stock {
   final int id;
-  final String name;
-  final String symbol;
-  final String createdAt;
-  final String updatedAt;
-  final String alpacaId;
-  final String exchange;
-  final String description;
-  final String assetType;
-  final String isin;
-  final String industry;
-  final String sector;
-  final int employees;
-  final String website;
-  final String address;
+  final String? name;
+  final String? symbol;
+  final String? exchange;
+  final String? description;
+  final String? assetType;
+  final String? isin;
+  final String? industry;
+  final String? sector;
+  final int? employees;
+  final String? website;
+  final String? address;
   final String? netZeroProgress;
   final double? carbonIntensityScope3;
   final double? carbonIntensityScope1And2;
@@ -100,26 +107,23 @@ class Stock {
   final double? scope2Emissions;
   final double? scope3Emissions;
   final double? totalEmissions;
-  final String listingDate;
-  final String marketCap;
+  final String? listingDate;
+  final String? marketCap;
   final int? ibkrConnectionId;
 
   Stock({
     required this.id,
-    required this.name,
-    required this.symbol,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.alpacaId,
-    required this.exchange,
-    required this.description,
-    required this.assetType,
-    required this.isin,
-    required this.industry,
-    required this.sector,
-    required this.employees,
-    required this.website,
-    required this.address,
+    this.name,
+    this.symbol,
+    this.exchange,
+    this.description,
+    this.assetType,
+    this.isin,
+    this.industry,
+    this.sector,
+    this.employees,
+    this.website,
+    this.address,
     this.netZeroProgress,
     this.carbonIntensityScope3,
     this.carbonIntensityScope1And2,
@@ -133,44 +137,76 @@ class Stock {
     this.scope2Emissions,
     this.scope3Emissions,
     this.totalEmissions,
-    required this.listingDate,
-    required this.marketCap,
+    this.listingDate,
+    this.marketCap,
     this.ibkrConnectionId,
   });
 
+  // Factory constructor to create a Stock from JSON
   factory Stock.fromJson(Map<String, dynamic> json) {
     return Stock(
-      id: json['id'] as int? ?? 0,
-      name: json['name'] as String? ?? '',
-      symbol: json['symbol'] as String? ?? '',
-      createdAt: json['createdAt'] as String? ?? '',
-      updatedAt: json['updatedAt'] as String? ?? '',
-      alpacaId: json['alpaca_id'] as String? ?? '',
-      exchange: json['exchange'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      assetType: json['asset_type'] as String? ?? '',
-      isin: json['isin'] as String? ?? '',
-      industry: json['industry'] as String? ?? '',
-      sector: json['sector'] as String? ?? '',
-      employees: json['employees'] as int? ?? 0,
-      website: json['website'] as String? ?? '',
-      address: json['address'] as String? ?? '',
+      id: json['id'] as int,
+      name: json['name'] as String?,
+      symbol: json['symbol'] as String?,
+      exchange: json['exchange'] as String?,
+      description: json['description'] as String?,
+      assetType: json['asset_type'] as String?,
+      isin: json['isin'] as String?,
+      industry: json['industry'] as String?,
+      sector: json['sector'] as String?,
+      employees: json['employees'] as int?,
+      website: json['website'] as String?,
+      address: json['address'] as String?,
       netZeroProgress: json['net_zero_progress'] as String?,
-      carbonIntensityScope3: json['carbon_intensity_scope_3'] != null ? (json['carbon_intensity_scope_3'] as num).toDouble() : null,
-      carbonIntensityScope1And2: json['carbon_intensity_scope_1_and_2'] != null ? (json['carbon_intensity_scope_1_and_2'] as num).toDouble() : null,
-      carbonIntensityScope1And2And3: json['carbon_intensity_scope_1_and_2_and_3'] != null ? (json['carbon_intensity_scope_1_and_2_and_3'] as num).toDouble() : null,
+      carbonIntensityScope3: (json['carbon_intensity_scope_3'] as num?)?.toDouble(),
+      carbonIntensityScope1And2: (json['carbon_intensity_scope_1_and_2'] as num?)?.toDouble(),
+      carbonIntensityScope1And2And3: (json['carbon_intensity_scope_1_and_2_and_3'] as num?)?.toDouble(),
       tempAlignmentScopes1And2: json['temp_alignment_scopes_1_and_2'] as String?,
       dnshAssessmentPass: json['dnsh_assessment_pass'] as bool?,
       goodGovernanceAssessment: json['good_governance_assessment'] as bool?,
       contributeToEnvironmentOrSocialObjective: json['contribute_to_environment_or_social_objective'] as bool?,
       sustainableInvestment: json['sustainable_investment'] as bool?,
-      scope1Emissions: json['scope_1_emissions'] != null ? (json['scope_1_emissions'] as num).toDouble() : null,
-      scope2Emissions: json['scope_2_emissions'] != null ? (json['scope_2_emissions'] as num).toDouble() : null,
-      scope3Emissions: json['scope_3_emissions'] != null ? (json['scope_3_emissions'] as num).toDouble() : null,
-      totalEmissions: json['total_emissions'] != null ? (json['total_emissions'] as num).toDouble() : null,
-      listingDate: json['listing_date'] as String? ?? '',
-      marketCap: json['market_cap'] as String? ?? '',
+      scope1Emissions: (json['scope_1_emissions'] as num?)?.toDouble(),
+      scope2Emissions: (json['scope_2_emissions'] as num?)?.toDouble(),
+      scope3Emissions: (json['scope_3_emissions'] as num?)?.toDouble(),
+      totalEmissions: (json['total_emissions'] as num?)?.toDouble(),
+      listingDate: json['listing_date'] as String?,
+      marketCap: json['market_cap'] as String?,
       ibkrConnectionId: json['ibkr_connection_id'] as int?,
     );
+  }
+
+  // Method to convert a Stock to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'symbol': symbol,
+      'exchange': exchange,
+      'description': description,
+      'asset_type': assetType,
+      'isin': isin,
+      'industry': industry,
+      'sector': sector,
+      'employees': employees,
+      'website': website,
+      'address': address,
+      'net_zero_progress': netZeroProgress,
+      'carbon_intensity_scope_3': carbonIntensityScope3,
+      'carbon_intensity_scope_1_and_2': carbonIntensityScope1And2,
+      'carbon_intensity_scope_1_and_2_and_3': carbonIntensityScope1And2And3,
+      'temp_alignment_scopes_1_and_2': tempAlignmentScopes1And2,
+      'dnsh_assessment_pass': dnshAssessmentPass,
+      'good_governance_assessment': goodGovernanceAssessment,
+      'contribute_to_environment_or_social_objective': contributeToEnvironmentOrSocialObjective,
+      'sustainable_investment': sustainableInvestment,
+      'scope_1_emissions': scope1Emissions,
+      'scope_2_emissions': scope2Emissions,
+      'scope_3_emissions': scope3Emissions,
+      'total_emissions': totalEmissions,
+      'listing_date': listingDate,
+      'market_cap': marketCap,
+      'ibkr_connection_id': ibkrConnectionId,
+    };
   }
 }

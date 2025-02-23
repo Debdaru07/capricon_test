@@ -106,7 +106,7 @@ class _StockHoldingsListingState extends ConsumerState<StockHoldingsListing> {
                               contentPadding: const EdgeInsets.all(AppConstants.paddingMedium),
                               leading: const Icon(Icons.business, color: AppConstants.accentGold),
                               title: Text(
-                                holding.stock.name,
+                                holding.stock.name ?? 'N/A',
                                 style: AppConstants.bodyFont.copyWith(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -114,7 +114,7 @@ class _StockHoldingsListingState extends ConsumerState<StockHoldingsListing> {
                                 ),
                               ),
                               subtitle: Text(
-                                holding.stock.symbol,
+                                holding.stock.symbol ?? 'N/A',
                                 style: AppConstants.bodyFont.copyWith(
                                   fontSize: 14,
                                   color: AppConstants.textColor.withOpacity(0.8),

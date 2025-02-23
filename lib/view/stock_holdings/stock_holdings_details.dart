@@ -36,7 +36,7 @@ class _StockHoldingDetailsState extends State<StockHoldingDetails> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            stock.name,
+            stock.name ?? 'N/A',
             style: AppConstants.headlineFont.copyWith(
               fontSize: 20,
               color: AppConstants.primaryBackground,
@@ -113,13 +113,13 @@ class _StockHoldingDetailsState extends State<StockHoldingDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildDetailRow('Exchange', stock.exchange),
-                          _buildDetailRow('Industry', stock.industry),
-                          _buildDetailRow('Sector', stock.sector),
-                          _buildDetailRow('Employees', stock.employees.toString() ?? 'N/A'),
-                          _buildDetailRow('Listing Date', stock.listingDate),
-                          _buildDetailRow('Market Cap', stock.marketCap),
-                          _buildLinkRow('Website', stock.website),
+                          _buildDetailRow('Exchange', stock.exchange ?? ''),
+                          _buildDetailRow('Industry', stock.industry ?? ''),
+                          _buildDetailRow('Sector', stock.sector ?? ''),
+                          _buildDetailRow('Employees', (stock.employees ?? 0).toString()),
+                          _buildDetailRow('Listing Date', stock.listingDate ?? ''),
+                          _buildDetailRow('Market Cap', stock.marketCap ?? ''),
+                          _buildLinkRow('Website', stock.website ?? ''),
                           Padding(
                             padding: const EdgeInsets.only(top: AppConstants.paddingSmall),
                             child: Text(
