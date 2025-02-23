@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/constants.dart';
 import '../model/stock_model.dart';
 import '../providers/stock_details_provider.dart';
 
@@ -23,117 +24,180 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
   Widget build(BuildContext context) {
     final stockState = ref.watch(stockDetailsProvider(widget.stockId));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Stock Details'),
-        elevation: 2,
-        backgroundColor: Colors.teal,
+    return Theme(
+      data: AppConstants.darkTheme,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Stock Details',
+            style: AppConstants.linkFont.copyWith(
+              fontSize: 25,
+              color: AppConstants.primaryBackground,
+            ),
+          ),
+          elevation: 2,
+          backgroundColor: AppConstants.accentGold,
+          iconTheme: IconThemeData(
+            color: Colors.black, // Set the back button color to black
+          )
+        ),
+        body: stockState.isLoading
+            ? const Center(child: CircularProgressIndicator(color: AppConstants.accentGold))
+            : stockState.error != null
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Error: ${stockState.error}',
+                          style: AppConstants.bodyFont.copyWith(color: Colors.red, fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: AppConstants.paddingMedium),
+                        ElevatedButton(
+                          onPressed: () => ref
+                              .read(stockDetailsProvider(widget.stockId).notifier)
+                              .fetchStockDetails(widget.stockId),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppConstants.accentGold,
+                            foregroundColor: AppConstants.primaryBackground,
+                          ),
+                          child: Text(
+                            'Retry',
+                            style: AppConstants.bodyFont,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : stockState.stockDetails != null
+                    ? _buildStockDetails(context, stockState.stockDetails!)
+                    : Center(
+                        child: Text(
+                          'No data available',
+                          style: AppConstants.bodyFont,
+                        ),
+                      ),
       ),
-      body: stockState.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : stockState.error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Error: ${stockState.error}',
-                        style: const TextStyle(color: Colors.red, fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () => ref
-                            .read(stockDetailsProvider(widget.stockId).notifier)
-                            .fetchStockDetails(widget.stockId),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                )
-              : stockState.stockDetails != null
-                  ? _buildStockDetails(context, stockState.stockDetails!)
-                  : const Center(child: Text('No data available')),
     );
   }
 
   Widget _buildStockDetails(BuildContext context, StockDetailsModel stock) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(AppConstants.paddingLarge),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Card(
             elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: const BorderSide(color: AppConstants.accentGold),
+            ),
+            color: Colors.grey[900],
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppConstants.paddingMedium),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     stock.name ?? 'Unknown Stock',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.teal,
-                        ),
+                    style: AppConstants.headlineFont.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstants.textColor,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppConstants.paddingSmall),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Symbol: ${stock.symbol ?? 'N/A'}',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: AppConstants.bodyFont.copyWith(
+                          fontSize: 16,
+                          color: AppConstants.textColor,
+                        ),
                       ),
-                      Text(
-                        'Price: ${stock.price != null ? '\$${stock.price!.toStringAsFixed(2)}' : 'N/A'}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: stock.changePercent != null && stock.changePercent! >= 0
-                                  ? Colors.green
-                                  : Colors.red,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            stock.price != null ? '\$${stock.price!.toStringAsFixed(2)}' : 'N/A',
+                            style: AppConstants.bodyFont.copyWith(
+                              fontSize: 16,
+                              color: AppConstants.textColor,
                             ),
+                          ),
+                          const SizedBox(width: AppConstants.paddingSmall),
+                          if (stock.changePercent != null)
+                            Row(
+                              children: [
+                                Icon(
+                                  stock.changePercent! >= 0 ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                                  color: stock.changePercent! >= 0 ? Colors.green : Colors.red,
+                                  size: 24,
+                                ),
+                                Text(
+                                  '${stock.changePercent!.toStringAsFixed(2)}%',
+                                  style: AppConstants.bodyFont.copyWith(
+                                    fontSize: 16,
+                                    color: stock.changePercent! >= 0 ? Colors.green : Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Change: ${stock.changePercent != null ? '${stock.changePercent!.toStringAsFixed(2)}%' : 'N/A'}',
-                    style: TextStyle(
-                      color: stock.changePercent != null && stock.changePercent! >= 0
-                          ? Colors.green
-                          : Colors.red,
-                      fontSize: 16,
-                    ),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppConstants.paddingMedium),
+          const Divider(color: AppConstants.accentGold, thickness: 1),
+          const SizedBox(height: AppConstants.paddingMedium),
           Text(
             'Description',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: AppConstants.headlineFont.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppConstants.textColor,
+            ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppConstants.paddingSmall),
           Text(
             stock.description ?? 'No description available',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: AppConstants.bodyFont.copyWith(
+              fontSize: 14,
+              color: AppConstants.textColor.withOpacity(0.8),
+            ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppConstants.paddingMedium),
           Card(
             elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: const BorderSide(color: AppConstants.accentGold),
+            ),
+            color: Colors.grey[900],
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppConstants.paddingMedium),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Key Metrics',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: AppConstants.headlineFont.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstants.textColor,
+                    ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppConstants.paddingMedium),
                   _buildMetricRow('Exchange', stock.exchange ?? 'N/A'),
                   _buildMetricRow('Sector', stock.sector ?? 'N/A'),
                   _buildMetricRow('Industry', stock.industry ?? 'N/A'),
@@ -143,20 +207,60 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppConstants.paddingMedium),
           Text(
             'Top Holdings',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: AppConstants.headlineFont.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppConstants.textColor,
+            ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppConstants.paddingSmall),
           if (stock.holdings.isEmpty)
-            const Text('No holdings available')
+            Text(
+              'No holdings available',
+              style: AppConstants.bodyFont.copyWith(
+                fontSize: 14,
+                color: AppConstants.textColor.withOpacity(0.8),
+              ),
+            )
           else
-            ...stock.holdings.take(3).map((holding) => ListTile(
-                  title: Text(holding.stock.name ?? 'Unknown'),
-                  subtitle: Text(
-                      'Percentage: ${holding.percentage != null ? holding.percentage!.toStringAsFixed(2) : 'N/A'}%'),
-                  trailing: Text(holding.stock.symbol ?? 'N/A'),
+            ...stock.holdings.take(3).map((holding) => Card(
+                  margin: const EdgeInsets.symmetric(vertical: AppConstants.paddingSmall),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: const BorderSide(color: AppConstants.accentGold),
+                  ),
+                  color: Colors.grey[900],
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(AppConstants.paddingMedium),
+                    leading: const Icon(Icons.business, color: AppConstants.accentGold),
+                    title: Text(
+                      holding.stock.name ?? 'Unknown',
+                      style: AppConstants.bodyFont.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppConstants.textColor,
+                      ),
+                    ),
+                    subtitle: Text(
+                      holding.stock.symbol ?? 'N/A',
+                      style: AppConstants.bodyFont.copyWith(
+                        fontSize: 14,
+                        color: AppConstants.textColor.withOpacity(0.8),
+                      ),
+                    ),
+                    trailing: Text(
+                      'Percentage: ${holding.percentage != null ? '${holding.percentage!.toStringAsFixed(2)}%' : 'N/A'}',
+                      style: AppConstants.bodyFont.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppConstants.textColor,
+                      ),
+                    ),
+                  ),
                 )),
         ],
       ),
@@ -165,12 +269,25 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
 
   Widget _buildMetricRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.paddingSmall),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-          Text(value),
+          Text(
+            label,
+            style: AppConstants.bodyFont.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppConstants.textColor,
+            ),
+          ),
+          Text(
+            value,
+            style: AppConstants.bodyFont.copyWith(
+              fontSize: 16,
+              color: AppConstants.textColor.withOpacity(0.8),
+            ),
+          ),
         ],
       ),
     );
