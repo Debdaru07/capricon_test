@@ -44,13 +44,16 @@ class _StockHoldingsListingState extends ConsumerState<StockHoldingsListing> {
         appBar: AppBar(
           title: Text(
             'Top Holdings',
-            style: AppConstants.headlineFont.copyWith(
-              fontSize: 24,
+            style: AppConstants.linkFont.copyWith(
+              fontSize: 25,
               color: AppConstants.primaryBackground,
             ),
           ),
           backgroundColor: AppConstants.accentGold,
           elevation: 2,
+          iconTheme: IconThemeData(
+            color: Colors.black, // Set the back button color to black
+          )
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppConstants.paddingLarge),

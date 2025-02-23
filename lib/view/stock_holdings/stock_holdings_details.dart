@@ -37,13 +37,16 @@ class _StockHoldingDetailsState extends State<StockHoldingDetails> {
         appBar: AppBar(
           title: Text(
             stock.name ?? 'N/A',
-            style: AppConstants.headlineFont.copyWith(
-              fontSize: 20,
+            style: AppConstants.linkFont.copyWith(
+              fontSize: 25,
               color: AppConstants.primaryBackground,
             ),
           ),
           backgroundColor: AppConstants.accentGold,
           elevation: 2,
+          iconTheme: IconThemeData(
+            color: Colors.black, // Set the back button color to black
+          )
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppConstants.paddingLarge),
