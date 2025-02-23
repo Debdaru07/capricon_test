@@ -57,17 +57,12 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
                         ),
                         const SizedBox(height: AppConstants.paddingMedium),
                         ElevatedButton(
-                          onPressed: () => ref
-                              .read(stockDetailsProvider(widget.stockId).notifier)
-                              .fetchStockDetails(widget.stockId),
+                          onPressed: () => ref.read(stockDetailsProvider(widget.stockId).notifier).fetchStockDetails(widget.stockId),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppConstants.accentGold,
                             foregroundColor: AppConstants.primaryBackground,
                           ),
-                          child: Text(
-                            'Retry',
-                            style: AppConstants.bodyFont,
-                          ),
+                          child: Text('Retry', style: AppConstants.bodyFont),
                         ),
                       ],
                     ),
@@ -102,12 +97,26 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    stock.name ?? 'Unknown Stock',
-                    style: AppConstants.headlineFont.copyWith(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: AppConstants.textColor,
+                  // Use Text.rich with TextSpan for name and symbol
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: stock.name ?? 'Unknown Stock',
+                          style: AppConstants.headlineFont.copyWith(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppConstants.textColor,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' (${stock.symbol ?? 'N/A'})', // Symbol in parentheses after name
+                          style: AppConstants.linkFont.copyWith(
+                            fontSize: 18, // Increased size as requested
+                            color: AppConstants.textColor, // White color for symbol
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: AppConstants.paddingSmall),
@@ -115,44 +124,44 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        'Symbol: ${stock.symbol ?? 'N/A'}',
-                        style: AppConstants.bodyFont.copyWith(
-                          fontSize: 16,
-                          color: AppConstants.textColor,
-                        ),
-                      ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
                             stock.price != null ? '\$${stock.price!.toStringAsFixed(2)}' : 'N/A',
                             style: AppConstants.bodyFont.copyWith(
-                              fontSize: 16,
-                              color: AppConstants.textColor,
+                              fontSize: 20,
+                              color: AppConstants.accentGold, // Golden color for price value
+                              fontWeight: FontWeight.bold
                             ),
                           ),
-                          const SizedBox(width: AppConstants.paddingSmall),
-                          if (stock.changePercent != null)
-                            Row(
-                              children: [
-                                Icon(
-                                  stock.changePercent! >= 0 ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                                  color: stock.changePercent! >= 0 ? Colors.green : Colors.red,
-                                  size: 24,
-                                ),
-                                Text(
-                                  '${stock.changePercent!.toStringAsFixed(2)}%',
-                                  style: AppConstants.bodyFont.copyWith(
-                                    fontSize: 16,
-                                    color: stock.changePercent! >= 0 ? Colors.green : Colors.red,
-                                  ),
-                                ),
-                              ],
+                          Text(
+                            ' ( Price )',
+                            style: AppConstants.bodyFont.copyWith(
+                              fontSize: 16,
+                              color: AppConstants.textColor, // White color for "Price:" label
                             ),
+                          ),
                         ],
                       ),
+                      const SizedBox(width: AppConstants.paddingSmall),
+                      if (stock.changePercent != null)
+                        Row(
+                          children: [
+                            Icon(
+                              stock.changePercent! >= 0 ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                              color: stock.changePercent! >= 0 ? Colors.green : Colors.red,
+                              size: 24,
+                            ),
+                            Text(
+                              '${stock.changePercent!.toStringAsFixed(2)}%',
+                              style: AppConstants.bodyFont.copyWith(
+                                fontSize: 16,
+                                color: stock.changePercent! >= 0 ? Colors.green : Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ],
@@ -226,23 +235,26 @@ class _StockDetailsScreenState extends ConsumerState<StockDetailsScreen> {
                 ),
               ),
               // StockHoldingsListing
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => StockHoldingsListing(initialHoldings: stock.holdings,)
-                    )
-                  );
-                },
-                child: Text(
-                  'See All',
-                  style: AppConstants.linkFont.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppConstants.textColor,
-                    decoration: TextDecoration.underline, // Add underline
-                    fontStyle: FontStyle.italic
+              Visibility(
+                visible: stock.holdings.isNotEmpty,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => StockHoldingsListing(initialHoldings: stock.holdings,)
+                      )
+                    );
+                  },
+                  child: Text(
+                    'See All',
+                    style: AppConstants.linkFont.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstants.textColor,
+                      decoration: TextDecoration.underline, // Add underline
+                      fontStyle: FontStyle.italic
+                    ),
                   ),
                 ),
               ),
