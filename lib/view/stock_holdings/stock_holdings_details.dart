@@ -74,28 +74,15 @@ class _StockHoldingDetailsState extends State<StockHoldingDetails> {
                       color: AppConstants.textColor.withOpacity(0.8),
                     ),
                   ),
-                  trailing: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Percentage: ${widget.holding.percentage?.toStringAsFixed(2) ?? 'N/A'}%',
-                        style: AppConstants.bodyFont.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppConstants.textColor,
-                        ),
-                      ),
-                      Icon(
-                        _isExpanded ? Icons.expand_less : Icons.expand_more,
-                        color: AppConstants.accentGold,
-                      )
-                    ],
+                  trailing: Text(
+                    'Percentage: ${widget.holding.percentage?.toStringAsFixed(2) ?? 'N/A'}%',
+                    style: AppConstants.bodyFont.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstants.textColor,
+                    ),
                   ),
                   onTap: _toggleExpansion,
-                  // trailing: Icon(
-                  //   _isExpanded ? Icons.expand_less : Icons.expand_more,
-                  //   color: AppConstants.accentGold,
-                  // ),
                 ),
               ),
               if (_isExpanded)
