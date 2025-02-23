@@ -13,9 +13,8 @@ To run this project locally, follow these steps:
 2.  **Clone the Repository**:
     * Clone this repository to your local machine:
         ```bash
-        git clone <repository-url>
+        git clone https://github.com/Debdaru07/capricon_test.git
         ```
-        Replace `<repository-url>` with the URL of your Git repository if hosted (e.g., GitHub, GitLab).
 
 3.  **Install Dependencies**:
     * Navigate to the project directory:
@@ -27,16 +26,7 @@ To run this project locally, follow these steps:
         flutter pub get
         ```
 
-4.  **Set Up Environment Variables**:
-    * Create a `.env` file in the root directory (if required) and add any API keys or configuration values (e.g., for stock APIs or authentication services).
-
-    * Example `.env` (if applicable):
-        ```text
-        API_KEY=your_api_key_here
-        BASE_URL=[https://api.example.com](https://api.example.com)
-        ```
-
-5.  **Run the App**:
+4.  **Run the App**:
     * Connect a physical device or start an emulator/simulator.
     * Run the app:
         ```bash
@@ -89,8 +79,10 @@ Based on the folder structure, the app includes the following key screens:
 The project likely uses Flutter packages for functionality like state management, HTTP requests, and UI components. To view and manage dependencies, check the `pubspec.yaml` file in the root directory. Common dependencies might include:
 
 * `flutter_riverpod` or `provider` for state management.
-* `http` or `dio` for API calls.
-* `flutter_secure_storage` for secure storage (if authentication involves tokens).
+* `dio` for API calls.
+* `cupertino_icons` for Apple Icons Library 
+* `google_fonts` for Google Fonts Library
+* `url_launcher` for Launching a URL in a browser
 
 Run `flutter pub get` to install these dependencies after cloning the repository.
 
